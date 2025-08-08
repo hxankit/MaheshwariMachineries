@@ -71,7 +71,7 @@ const Footer = () => {
 
       {/* Bottom Strip */}
       <div className="bg-orange-600 text-white text-sm text-center py-4">
-        © 2024 Maheshwari Machineries. All rights reserved. | Designed by <span className="font-semibold underline">SCS Technologies</span>
+        © 2024 Maheshwari Machineries. All rights reserved. | Designed by <span className="font-semibold underline">Niharika Maheshwari</span>
       </div>
     </footer>
   );
