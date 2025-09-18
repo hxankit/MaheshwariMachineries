@@ -10,15 +10,18 @@ function ProductSection() {
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
 
-    fetch('https://dummyjson.com/products?limit=8')
+    fetch(`${import.meta.env.VITE_API_URL}/products/allproducts?limit=8`)
       .then(res => res.json())
       .then(data => {
-        const formatted = data.products.map((item) => ({
-          id: item.id,
+        // console.log(data.data)
+        const formatted = data.data.map((item) => ({
+          
+          id: item._id,
           title: item.title,
-          image: item.thumbnail,
+          image: item.image,
           link: `/product-details/${item.id}`,
         }));
+        console.log(formatted)
         setProducts(formatted);
         setLoading(false);
       })
@@ -61,9 +64,9 @@ function ProductSection() {
                 >
                   <div className="bg-white border border-gray-300 rounded-xl overflow-hidden shadow hover:shadow-blue-200 transition-shadow duration-300">
                     <img
-                      src={product.image}
+                      src={`${import.meta.env.VITE_API_URL}/${product.image}`}
                       alt={product.title}
-                      className="w-full h-52 object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                     <div className="p-4 text-center">
                       <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">

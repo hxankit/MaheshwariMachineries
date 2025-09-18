@@ -15,14 +15,19 @@ function AdminLogin() {
 
     try {
       const res = await axios.post(
-        'http://localhost:8000/api/admin/login',
+        `${import.meta.env.VITE_API_URL}/admin/login`,
         { email, password },
         { withCredentials: true } // important for cookie-based login
       );
-      localStorage.setItem('token', res.data.token); // optional
-      navigate('/admindash');
+      if(res.data.success){
+        localStorage.setItem('token', res.data.token); // optional
+        navigate('/admin');
+
+      }
+      console.log(res)
     } catch (err) {
-      setError('🚫 Invalid credentials. Please try again.');
+      
+      setError(`🚫 Invalid credentials. Please try again. ${err.message}`);
     }
   };
 

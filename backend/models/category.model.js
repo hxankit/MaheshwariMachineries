@@ -10,7 +10,11 @@ const CategorySchema = new mongoose.Schema({
     desc:{
         type:String,
         default:""
+    },
+    pic:{
+        type:String
     }
+    
 
 })
 

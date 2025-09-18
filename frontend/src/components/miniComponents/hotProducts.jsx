@@ -3,6 +3,7 @@ import AOS from 'aos';
 import 'aos/dist/aos.css';
 
 import { FaProjectDiagram, FaSmile, FaQuestionCircle, FaCoffee } from 'react-icons/fa';
+import { Boxes } from 'lucide-react';
 
 function HotProductsAndStats() {
   const [hotProducts, setHotProducts] = useState([]);
@@ -44,7 +45,7 @@ function HotProductsAndStats() {
   return (
     <div className="bg-white text-gray-900" ref={sectionRef}>
       {/* Hot Product List */}
-      <section className="py-16 px-4">
+      {/* <section className="py-16 px-4">
         <h2
           className="text-center text-4xl font-bold mb-12 text-blue-700"
           data-aos="fade-down"
@@ -77,15 +78,15 @@ function HotProductsAndStats() {
                 </div>
               ))}
         </div>
-      </section>
+      </section> */}
 
       {/* Stats Section */}
       <section className="bg-gradient-to-r from-blue-100 via-white to-blue-100 py-12">
         <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          <StatCard icon={<FaProjectDiagram />} number="7652" label="Completed Projects" aosType="fade-up" />
-          <StatCard icon={<FaSmile />} number="4562" label="Happy Clients" aosType="zoom-in" />
-          <StatCard icon={<FaQuestionCircle />} number="3569" label="Questions Answered" aosType="flip-left" />
-          <StatCard icon={<FaCoffee />} number="2089" label="Ordered Coffees" aosType="slide-up" />
+          <StatCard icon={<FaProjectDiagram />} number="34444" label="Customers" aosType="fade-up" />
+          <StatCard icon={<FaSmile />} number="45642" label="Happy Clients" aosType="zoom-in" />
+          <StatCard icon={<FaQuestionCircle />} number="356" label="Questions Answered" aosType="flip-left" />
+          <StatCard icon={<Boxes />} number="2000" label="Ordered completed" aosType="slide-up" />
         </div>
       </section>
     </div>

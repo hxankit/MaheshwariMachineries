@@ -58,13 +58,14 @@ const Footer = () => {
           <div className="rounded overflow-hidden border border-gray-700 shadow-lg">
             <iframe
               title="Maheshwari Machineries Map"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7012.189230083065!2d77.28722965!3d28.68247795!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfb84e763a4b9%3A0x6ac7cf9f45a74fbd!2sMohan%20Nagar%2C%20Ghaziabad%2C%20Uttar%20Pradesh!5e0!3m2!1sen!2sin!4v1700000000000"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d355.2028084961492!2d78.618021!3d27.7784696!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3974e1ac8e9a8635%3A0x885534b52943a83c!2sNadrai%2C%20Uttar%20Pradesh%20207123%2C%20India!5e0!3m2!1sen!2sin!4v1723800000000"
               width="100%"
               height="200"
               allowFullScreen=""
               loading="lazy"
               className="border-0 w-full h-48"
             ></iframe>
+
           </div>
         </div>
       </div>
