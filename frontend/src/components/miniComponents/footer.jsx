@@ -5,6 +5,7 @@ import {
   FaLinkedinIn,
   FaWhatsapp,
 } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -15,10 +16,10 @@ const Footer = () => {
           <h2 className="text-xl font-bold text-white mb-4">Maheshwari Machineries</h2>
           <p className="text-sm mb-3">
             Trusted supplier of Submersible Pumps, Hand Pumps, PVC Pipes, and other high-quality
-            industrial & agricultural machinery since 2023.
+            industrial & agricultural machinery since 2016.
           </p>
-          <p className="text-sm">📞 +91-9548353466</p>
-          <p className="text-sm">📧 niharikamaheshwari097@gmail.com</p>
+          <p className="text-sm">📞 +91-9675383297</p>
+          <p className="text-sm">📧 maheshwari@gmail.com</p>
           <p className="text-sm">📍 Nadrai,kasganj, UP</p>
         </div>
 
@@ -26,15 +27,14 @@ const Footer = () => {
         <div>
           <h3 className="text-lg font-semibold border-b-2 border-orange-500 inline-block mb-4">Quick Links</h3>
           <ul className="space-y-2 text-sm">
-            <li><a href="#" className="hover:text-orange-400">About Us</a></li>
-            <li><a href="#" className="hover:text-orange-400">Contact</a></li>
-            <li><a href="#" className="hover:text-orange-400">Product Catalogue</a></li>
-            <li><a href="#" className="hover:text-orange-400">Privacy Policy</a></li>
+            <li><Link to={"/about"} className="hover:text-orange-400">About Us</Link></li>
+            <li><Link to={"/contact"} className="hover:text-orange-400">Contact</Link></li>
+            <li><Link to={"/gallery"} className="hover:text-orange-400">Product Catalogue</Link></li>
           </ul>
         </div>
 
         {/* Products */}
-        <div>
+        {/* <div>
           <h3 className="text-lg font-semibold border-b-2 border-orange-500 inline-block mb-4">Products</h3>
           <ul className="space-y-2 text-sm">
             <li><a href="#" className="hover:text-orange-400">Submersible Water Pumps</a></li>
@@ -43,14 +43,14 @@ const Footer = () => {
             <li><a href="#" className="hover:text-orange-400">Agricultural Tools</a></li>
           </ul>
 
-          {/* Socials */}
+          
           <div className="flex space-x-3 mt-6">
             <a href="#" className="text-xl hover:text-orange-400 transition"><FaFacebookF /></a>
-            <a href="#" className="text-xl hover:text-orange-400 transition"><FaInstagram /></a>
-            <a href="#" className="text-xl hover:text-orange-400 transition"><FaLinkedinIn /></a>
-            <a href="#" className="text-xl hover:text-orange-400 transition"><FaWhatsapp /></a>
+            <a className="text-xl hover:text-orange-400 transition"><FaInstagram /></a>
+            <a  className="text-xl hover:text-orange-400 transition"><FaLinkedinIn /></a>
+            <a className="text-xl hover:text-orange-400 transition"><FaWhatsapp /></a>
           </div>
-        </div>
+        </div> */}
 
         {/* Google Map */}
         <div>

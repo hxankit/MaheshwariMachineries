@@ -18,10 +18,9 @@ export default function ContactDetail() {
       fetchContact();
     }
   }, [state]);
-  console.log(contact)
   const fetchContact = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/contacts/contact/${id}`, {
+      const res = await axios.get(`/api/contacts/contact/${id}`, {
         withCredentials: true,
       });
       setContact(res.data.data);
@@ -35,7 +34,7 @@ export default function ContactDetail() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this request?")) return;
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/contacts/contact/${id}/delete`, {
+      await axios.delete(`/api/contacts/contact/${id}/delete`, {
         withCredentials: true,
       });
       navigate("/admin/contacts");

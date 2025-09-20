@@ -6,7 +6,7 @@ function GalleryPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/products/allproducts`)
+    fetch(`/api/products/allproducts`)
       .then((res) => res.json())
       .then((data) => {
         const imgUrls = data.data.map((item) => item.image);
@@ -41,7 +41,7 @@ function GalleryPage() {
                 className="mb-4 break-inside-avoid rounded-lg overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition"
               >
                 <img
-                  src={`${import.meta.env.VITE_API_URL}/${src}`}
+                  src={src}
                   alt={`Gallery ${idx + 1}`}
                   className="w-full h-auto object-cover hover:scale-105 transition-transform duration-300"
                 />

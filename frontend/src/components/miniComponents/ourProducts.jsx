@@ -10,18 +10,18 @@ function ProductSection() {
   useEffect(() => {
     AOS.init({ duration: 800, once: true });
 
-    fetch(`${import.meta.env.VITE_API_URL}/products/allproducts?limit=8`)
+    fetch(`/api/products/allproducts?limit=8`)
       .then(res => res.json())
       .then(data => {
-        // console.log(data.data)
+      
         const formatted = data.data.map((item) => ({
           
           id: item._id,
           title: item.title,
           image: item.image,
-          link: `/product-details/${item.id}`,
+          link: `/product/${item._id}`,
         }));
-        console.log(formatted)
+       
         setProducts(formatted);
         setLoading(false);
       })
@@ -42,41 +42,44 @@ function ProductSection() {
         </h2>
 
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {loading
-            ? Array.from({ length: 4 }).map((_, idx) => (
-                <div
-                  key={idx}
-                  className="animate-pulse bg-gray-200 p-4 rounded-xl shadow-inner"
-                  data-aos="fade-up"
-                  data-aos-delay={idx * 100}
-                >
-                  <div className="h-52 bg-gray-300 rounded mb-4"></div>
-                  <div className="h-5 bg-gray-300 rounded w-3/4 mx-auto"></div>
-                </div>
-              ))
-            : products.map((product, index) => (
-                <Link
-                  to={product.link}
-                  key={product.id}
-                  className="group"
-                  data-aos="fade-up"
-                  data-aos-delay={index * 100}
-                >
-                  <div className="bg-white border border-gray-300 rounded-xl overflow-hidden shadow hover:shadow-blue-200 transition-shadow duration-300">
-                    <img
-                      src={`${import.meta.env.VITE_API_URL}/${product.image}`}
-                      alt={product.title}
-                      className="w-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="p-4 text-center">
-                      <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
-                        {product.title}
-                      </h3>
-                    </div>
-                  </div>
-                </Link>
-              ))}
+  {loading
+    ? Array.from({ length: 4 }).map((_, idx) => (
+        <div
+          key={idx}
+          className="animate-pulse bg-gray-200 p-4 rounded-xl shadow-inner h-full flex flex-col"
+          data-aos="fade-up"
+          data-aos-delay={idx * 100}
+        >
+          <div className="h-52 bg-gray-300 rounded mb-4"></div>
+          <div className="h-5 bg-gray-300 rounded w-3/4 mx-auto mt-auto"></div>
         </div>
+      ))
+    : products.map((product, index) => (
+        <Link
+          to={product.link}
+          key={product.id}
+          className="group h-full"
+          data-aos="fade-up"
+          data-aos-delay={index * 100}
+        >
+          <div className="bg-white border border-gray-300 rounded-xl overflow-hidden shadow hover:shadow-blue-200 transition-shadow duration-300 flex flex-col h-full">
+            {/* fixed aspect ratio for equal height images */}
+            <div className="aspect-[4/3] w-full overflow-hidden">
+              <img
+                src={product.image}
+                alt={product.title}
+                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+              />
+            </div>
+            <div className="p-4 text-center mt-auto">
+              <h3 className="text-lg font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
+                {product.title}
+              </h3>
+            </div>
+          </div>
+        </Link>
+      ))}
+</div>
       </div>
     </section>
   );

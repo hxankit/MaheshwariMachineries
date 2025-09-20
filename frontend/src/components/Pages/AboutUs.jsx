@@ -6,6 +6,7 @@ import {
   FaPumpSoap,
 } from 'react-icons/fa';
 import NavBar from '../miniComponents/navabar';
+import Footer from '../miniComponents/footer';
 
 function AboutPage() {
   return (
@@ -107,6 +108,7 @@ function AboutPage() {
           </div>
         </div>
       </div>
+      <Footer/>
     </>
   );
 }

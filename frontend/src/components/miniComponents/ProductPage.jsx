@@ -10,7 +10,7 @@ function ProductsPage() {
   useEffect(() => {
     if (categoryid) {
       fetch(
-        `${import.meta.env.VITE_API_URL}/categories/${encodeURIComponent(
+        `/api/categories/${encodeURIComponent(
           categoryid
         )}/products`
       )
@@ -76,7 +76,7 @@ function ProductsPage() {
                   <img
                     src={
                       product.image
-                        ? `${import.meta.env.VITE_API_URL}/${product.image}`
+                        ? product.image
                         : "/placeholder.png"
                     }
                     alt={product.title}

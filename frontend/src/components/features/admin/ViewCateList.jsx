@@ -14,7 +14,7 @@ function ViewCategory() {
   // Fetch categories
   const fetchCategories = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/categories/category`, {
+      const res = await axios.get(`/api/categories/category`, {
         withCredentials: true,
       });
       setFilteredCategories(res.data.category || []);
@@ -40,7 +40,7 @@ function ViewCategory() {
     if (!window.confirm("Are you sure you want to delete this category?")) return;
     try {
       const res = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/categories/category/${id}/delete`,
+        `/api/categories/category/${id}/delete`,
         { withCredentials: true }
       );
       if (res.data.success) {
@@ -83,7 +83,7 @@ function ViewCategory() {
             onClick={() => navigate(`catergory`, { state: cat._id })} // click card navigates
           >
             <img
-              src={`${import.meta.env.VITE_API_URL}/${cat.pic}`}
+              src={cat.pic}
               alt={cat.name}
               className="w-full h-40 object-cover rounded-md mb-3"
             />

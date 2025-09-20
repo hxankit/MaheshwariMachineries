@@ -10,7 +10,7 @@ export default function ContactList() {
   // Fetch all contacts
   const fetchContacts = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_URL}/contacts/contact/all`, {
+      const res = await axios.get(`/api/contacts/contact/all`, {
         withCredentials: true,
       });
       setContacts(res.data.data || []);
@@ -26,7 +26,7 @@ export default function ContactList() {
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this request?")) return;
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/contacts/contact/${id}/delete`, {
+      await axios.delete(`/api/contacts/contact/${id}/delete`, {
         withCredentials: true,
       });
       setContacts(contacts.filter((c) => c._id !== id));

@@ -18,13 +18,13 @@ function ProductDetailsPage() {
     quantity: 1,
     notes: "",
   });
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL}/categories/product/${id}/productDetails`)
+      .get(`/api/categories/product/${id}/productDetails`)
       .then((res) => {
         setProduct(res.data.data);
-        console.log(res.data.data);
         setLoading(false);
       })
       .catch((err) => {
@@ -37,7 +37,36 @@ function ProductDetailsPage() {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
+  // Client-side validation
+  const validate = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "Invalid email address";
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^\d{10,15}$/.test(formData.phone)) {
+      newErrors.phone = "Phone number should be 10-15 digits";
+    }
+
+    if (formData.quantity < 1) newErrors.quantity = "Quantity must be at least 1";
+
+    return newErrors;
+  };
+
   const handleSubmit = async () => {
+    const validationErrors = validate();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
     const payload = {
       name: formData.name,
       email: formData.email,
@@ -54,7 +83,7 @@ function ProductDetailsPage() {
 
     try {
       const { data } = await axios.post(
-       ` ${import.meta.env.VITE_API_URL}/contacts/contact/create`,
+        `/api/contacts/contact/create`,
         payload
       );
 
@@ -69,6 +98,7 @@ function ProductDetailsPage() {
           quantity: 1,
           notes: "",
         });
+        setErrors({});
       } else {
         alert("❌ Failed to submit inquiry");
       }
@@ -110,7 +140,7 @@ function ProductDetailsPage() {
         <div className="max-w-4xl mx-auto bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden hover:shadow-xl transition-shadow duration-300">
           <div className="w-full flex items-center justify-center bg-gray-50 p-4">
             <img
-              src={`${import.meta.env.VITE_API_URL}/${product.image}`}
+              src={product.image}
               alt={product.title}
               className="w-48 h-48 sm:w-72 sm:h-72 object-contain rounded-lg shadow-sm"
             />
@@ -161,6 +191,8 @@ function ProductDetailsPage() {
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                 />
+                {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+
                 <input
                   type="email"
                   name="email"
@@ -169,6 +201,8 @@ function ProductDetailsPage() {
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                 />
+                {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+
                 <input
                   type="tel"
                   name="phone"
@@ -177,6 +211,8 @@ function ProductDetailsPage() {
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                 />
+                {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+
                 <textarea
                   name="message"
                   placeholder="Message"
@@ -185,6 +221,7 @@ function ProductDetailsPage() {
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none resize-none"
                   rows={3}
                 />
+
                 <input
                   type="number"
                   name="quantity"
@@ -194,6 +231,8 @@ function ProductDetailsPage() {
                   min={1}
                   className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
                 />
+                {errors.quantity && <p className="text-red-500 text-sm">{errors.quantity}</p>}
+
                 <textarea
                   name="notes"
                   placeholder="Notes / Special Instructions"

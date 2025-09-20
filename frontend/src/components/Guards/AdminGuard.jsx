@@ -8,10 +8,9 @@ function AdminRoute({ children }) {
     // Not logged in
     return <Navigate to="/login" replace />;
   }
-console.log(token)
   try {
     const decoded = jwtDecode(token); // { id, email, role, exp, ... }
-console.log(decoded)
+
     // If token expired
     if (decoded.exp * 1000 < Date.now()) {
       localStorage.removeItem("token");

@@ -10,8 +10,7 @@
     "swagger": "node ./scripts/swagger.js",
     "install-all": "npm install --legacy-peer-deps && npm --prefix ../frontend install",
     "build-frontend": "npm --prefix ../frontend run build",
-    "start-backend": "npm run start",
-    "deploy": "npm run install-all && npm run build-frontend && npm run start-backend"
+    "deploy": "npm run install-all && npm run build-frontend "
   },
 
   "keywords": [],

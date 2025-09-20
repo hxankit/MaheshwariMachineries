@@ -1,15 +1,9 @@
-import { useState, useRef, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Search, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 function NavBar() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
-  const navigate = useNavigate();
-
-  const searchRef = useRef(null);
 
   const navLinks = [
     { label: 'Home', to: '/' },
@@ -19,25 +13,30 @@ function NavBar() {
     { label: 'About Us', to: '/about' },
   ];
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${searchQuery}`);
-      setSearchQuery('');
-      setSearchOpen(false);
-    }
-  };
+  // // Search functionality (commented out)
+  // const [searchOpen, setSearchOpen] = useState(false);
+  // const [searchQuery, setSearchQuery] = useState('');
+  // const searchRef = useRef(null);
+  // const navigate = useNavigate();
+  // const handleSearch = (e) => {
+  //   e.preventDefault();
+  //   if (searchQuery.trim()) {
+  //     navigate(`/search?q=${searchQuery}`);
+  //     setSearchQuery('');
+  //     setSearchOpen(false);
+  //   }
+  // };
 
-  // ✅ close search if clicked outside
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (searchRef.current && !searchRef.current.contains(e.target)) {
-        setSearchOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  // // Close search if clicked outside
+  // useEffect(() => {
+  //   const handleClickOutside = (e) => {
+  //     if (searchRef.current && !searchRef.current.contains(e.target)) {
+  //       setSearchOpen(false);
+  //     }
+  //   };
+  //   document.addEventListener('mousedown', handleClickOutside);
+  //   return () => document.removeEventListener('mousedown', handleClickOutside);
+  // }, []);
 
   return (
     <nav className="bg-white text-gray-900 shadow-md sticky top-0 z-50">
@@ -65,14 +64,15 @@ function NavBar() {
           ))}
         </div>
 
-        {/* Search & Hamburger */}
+        {/* Hamburger */}
         <div className="flex items-center space-x-3">
-          <button
+          {/* Search button (commented out) */}
+          {/* <button
             onClick={() => setSearchOpen(true)}
             className="text-gray-800 hover:text-blue-700"
           >
             <Search size={22} />
-          </button>
+          </button> */}
           <button
             onClick={() => setMenuOpen(!menuOpen)}
             className="md:hidden text-2xl text-gray-800 focus:outline-none"
@@ -103,37 +103,6 @@ function NavBar() {
           ))}
         </div>
       </div>
-
-      {/* Full-width search overlay (mobile-friendly) */}
-      {searchOpen && (
-        <div
-          ref={searchRef}
-          className="absolute inset-x-0 top-0 bg-white shadow-lg p-4 flex items-center z-50"
-        >
-          <form onSubmit={handleSearch} className="flex flex-1 items-center">
-            <input
-              type="text"
-              placeholder="Search..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              autoFocus
-              className="w-full px-4 py-2 border rounded-l-md text-black focus:outline-none"
-            />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700"
-            >
-              Go
-            </button>
-          </form>
-          <button
-            onClick={() => setSearchOpen(false)}
-            className="ml-3 text-gray-600 hover:text-red-500"
-          >
-            <X size={24} />
-          </button>
-        </div>
-      )}
 
       {/* Hover underline animation */}
       <style>

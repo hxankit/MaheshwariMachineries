@@ -1,41 +1,56 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { FaLock, FaEnvelope } from 'react-icons/fa';
+import { useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { FaLock, FaEnvelope } from "react-icons/fa";
 
 function AdminLogin() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
+    setLoading(true);
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/admin/login`,
+        `/api/admin/login`,
         { email, password },
-        { withCredentials: true } // important for cookie-based login
+        { withCredentials: true }
       );
-      if(res.data.success){
-        localStorage.setItem('token', res.data.token); // optional
-        navigate('/admin');
 
+      if (res.data.success) {
+        localStorage.setItem("token", res.data.token); // optional if you're using JWT
+        navigate("/admin");
+      } else {
+        setError(res.data.message || "🚫 Login failed. Please try again.");
       }
-      console.log(res)
     } catch (err) {
-      
-      setError(`🚫 Invalid credentials. Please try again. ${err.message}`);
+      if (err.response) {
+        // Backend returned an error
+        setError(`🚫 ${err.response.data.message || "Invalid credentials"}`);
+      } else if (err.request) {
+        // No response from server
+        setError("⚠️ Server not responding. Please try again later.");
+      } else {
+        // Other errors
+        setError(`❌ Error: ${err.message}`);
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black flex items-center justify-center px-4">
       <div className="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md border border-gray-700 animate-fade-in">
-        <h1 className="text-3xl font-bold text-orange-400 mb-6 text-center">Admin Login</h1>
-        
+        <h1 className="text-3xl font-bold text-orange-400 mb-6 text-center">
+          Admin Login
+        </h1>
+
         {error && (
           <div className="bg-red-900 text-red-300 p-3 rounded mb-4 text-sm text-center border border-red-600">
             {error}
@@ -67,9 +82,12 @@ function AdminLogin() {
           </div>
           <button
             type="submit"
-            className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 rounded shadow-md transition-all duration-200"
+            disabled={loading}
+            className={`w-full ${
+              loading ? "bg-orange-300 cursor-not-allowed" : "bg-orange-500 hover:bg-orange-600"
+            } text-white font-semibold py-3 rounded shadow-md transition-all duration-200`}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
