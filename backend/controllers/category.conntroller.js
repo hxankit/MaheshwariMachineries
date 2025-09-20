@@ -1,64 +1,72 @@
 import { Category } from "../models/category.model.js"
 import fs from "fs"
 import { Product } from "../models/product.model.js"
+import cloudinary from "../config/cloudinary.js"
 
-export const addCategory=async(req,res)=>{
-    try {
-        const {name,desc}=req.body
-        const file=req.file
-        console.log(file)
-        const existedCategory=await Category.findOne({name})
-        if(existedCategory){
-            return res.status(403).json("This category already existed")
+export const addCategory = async (req, res) => {
+  try {
+    const { name, desc } = req.body
+    const file = req.file
     
-        }const fileurl=`uploads/${file.filename}`
-        const category=await Category.create({
-            name,
-            desc,
-            pic:fileurl,
-        })
-        return res.status(200).json({
-            message:"Category created Succesfully",
-        })
-    } catch (error) {
-        return res.status(500).json(`Internal server error ${error.message}`)
+    const existedCategory = await Category.findOne({ name })
+    if (existedCategory) {
+      return res.status(403).json("This category already existed")
+
     }
+    const category = await Category.create({
+      name,
+      desc,
+      pic: file.path,
+    })
+    return res.status(200).json({
+      message: "Category created Succesfully",
+    })
+  } catch (error) {
+    return res.status(500).json(`Internal server error ${error.message}`)
+  }
 }
+
+
 
 export const editCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
     const { name, desc } = req.body;
 
-    // Update and return the old document in one query
-    const oldCategory = await Category.findByIdAndUpdate(
-      categoryId,
-      {
-        name,
-        desc,
-        pic: req.file ? req.file.path : undefined, // update if new file exists
-      },
-      { new: false } // return old doc, not updated one
-    );
-
+    // Fetch the old category first
+    const oldCategory = await Category.findById(categoryId);
     if (!oldCategory) {
       return res.status(404).json("Category not found");
     }
 
+    // If new file is uploaded, delete old image from Cloudinary
     if (req.file && oldCategory.pic) {
-      if (fs.existsSync(oldCategory.pic)) {
-        fs.unlinkSync(oldCategory.pic);
-      }
+      // Extract public_id from oldCategory.pic
+      const segments = oldCategory.pic.split("/");
+      const fileName = segments[segments.length - 1]; // e.g., "abc123.jpg"
+      const publicId = `categories/${fileName.split(".")[0]}`; // adjust folder if needed
+
+      await cloudinary.uploader.destroy(publicId);
     }
+
+    // Update category
+    oldCategory.name = name;
+    oldCategory.desc = desc;
+    if (req.file) oldCategory.pic = req.file.path; // assuming you store Cloudinary URL in pic
+
+    await oldCategory.save();
 
     return res.status(200).json({
       message: "Category updated successfully",
+      data: oldCategory,
     });
-
   } catch (error) {
     return res.status(500).json(`Internal Server Error: ${error.message}`);
   }
 };
+
+
+
 
 export const deleteCategory = async (req, res) => {
   try {
@@ -66,37 +74,56 @@ export const deleteCategory = async (req, res) => {
 
     // Find the category first
     const category = await Category.findById(categoryId);
-    if (!category) {
-      return res.status(404).json("Category not found");
+    if (!category) return res.status(404).json("Category not found");
+
+    // Delete category image from Cloudinary
+    if (category.pic) {
+      const segments = category.pic.split("/");
+      const fileName = segments[segments.length - 1]; // e.g., "abc123.jpg"
+      const publicId = `categories/${fileName.split(".")[0]}`; // adjust folder if needed
+      await cloudinary.uploader.destroy(publicId);
     }
 
-    // Delete the image file if it exists
-    if (category.pic && fs.existsSync(category.pic)) {
-      fs.unlinkSync(category.pic);
+    // Find all products linked to this category
+    const products = await Product.find({ category: categoryId });
+
+    // Delete each product image from Cloudinary
+    for (const product of products) {
+      if (product.image) { // assuming product.image stores Cloudinary URL
+        const segments = product.image.split("/");
+        const fileName = segments[segments.length - 1];
+        const publicId = `products/${fileName.split(".")[0]}`; // adjust folder if needed
+        await cloudinary.uploader.destroy(publicId);
+      }
     }
 
-    // Delete the category from DB
+    // Delete all products of this category
+    await Product.deleteMany({ category: categoryId });
+
+    // Delete the category itself
     await Category.findByIdAndDelete(categoryId);
 
     return res.status(200).json({
-      success:true,
-      message: "Category deleted successfully",
+      success: true,
+      message: "Category and all associated products deleted successfully",
     });
   } catch (error) {
+    console.error(error);
     return res.status(500).json(`Internal Server Error: ${error.message}`);
   }
 };
 
+
 //public controller
-export const categories=async(req,res)=>{
+export const categories = async (req, res) => {
   try {
-    const cate=await Category.find()
-    if(!cate[0]){
+    const cate = await Category.find()
+    if (!cate[0]) {
       return res.status(200).json("No Categoriy Avaible ")
     }
     return res.status(200).json({
-      message:"Categories Found Succesfully",
-      category:cate
+      message: "Categories Found Succesfully",
+      category: cate
     })
   } catch (error) {
     return res.status(503).json(`Internal Server error ${error.message}`)

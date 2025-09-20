@@ -1,17 +1,13 @@
-import multer from 'multer'
-import path from 'path'
-import fs from 'fs'
-const uploadDir = path.join(process.cwd(), "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-const storage=multer.diskStorage({
-    destination:(req,file,cb)=>{
-        cb(null,uploadDir)
+import multer from "multer";
+import { CloudinaryStorage } from "multer-storage-cloudinary";
+import cloudinary from "../config/cloudinary.js";
 
-    },
-    filename:(req,file,cb)=>{
-        cb(null,Date.now() +"-"+ file.originalname)
-    }
-})
-export const upload=multer({storage})
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "products", // folder in Cloudinary
+    allowed_formats: ["jpg", "png", "jpeg"],
+  },
+});
+
+export const upload = multer({ storage });

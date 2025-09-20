@@ -1,53 +1,52 @@
-import express from 'express'
-import adminAuth from './routes/adminAuth.js'
-import fs from "fs"
+import express from "express";
+import path from "path";
+import cookieParser from "cookie-parser";
+import { fileURLToPath } from "url";
 
+// Routes
+import adminAuth from "./routes/adminAuth.js";
+import categoryRouter from "./routes/category.route.js";
+import productRouter from "./routes/product.route.js";
+import contactRouter from "./routes/contact.route.js";
 
+// DB
+import { connectdb } from "./db/connectdb.js";
 
-const swaggerDoc = JSON.parse(fs.readFileSync("./scripts/swagger.json", "utf-8"));
+// __dirname fix for ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+const app = express();
 
-import swaggerUi from "swagger-ui-express"
-import categoryRouter from './routes/category.route.js'
-import productRouter from './routes/product.route.js'
-import contactRouter from './routes/contact.route.js'
-import cookieParser from 'cookie-parser'
-import path from 'path'
-import { connectdb } from './db/connectdb.js'
-import cors from 'cors'
-
-const app = express()
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+// Body parsing
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.get("/", (req, res) => {
-    res.json("server is working")
-})
-app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerDoc))
-const allowedOrigins = process.env.ALLOWED_ORIGINS.split(",");
 
-app.use(cors({
-  origin: (origin, callback) => {
-    // allow requests with no origin (like mobile apps or curl)
-    if (!origin) return callback(null, true);
+// API routes
+app.use("/api/admin", adminAuth);
+app.use("/api/products", productRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/contacts", contactRouter);
 
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error("Not allowed by CORS"));
-    }
-  },
-  credentials: true,
-}));
-app.use("/api/uploads", express.static(path.join(process.cwd(), "uploads")));
-app.use('/api/admin/', adminAuth)
-app.use("/api/products",productRouter)
-app.use('/api/categories', categoryRouter);
-app.use('/api/contacts', contactRouter);
+// Serve frontend build (for production)
+const frontendDistPath = path.join(__dirname, "../frontend/dist");
+app.use(express.static(frontendDistPath));
 
-connectdb().then(() => {
-    app.listen(process.env.PORT, () => {
-        console.log(`Server is listening on port ${process.env.PORT}`);
+// Serve index.html for all frontend routes (SPA)
+app.get(/^\/(?!api\/).*/, (req, res) => {
+  res.sendFile(path.join(frontendDistPath, "index.html"));
+});
 
-    })
-})
+// Connect to DB and start server
+const PORT = process.env.PORT || 5000;
+connectdb()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("Database connection failed:", err.message);
+    process.exit(1);
+  });
