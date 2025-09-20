@@ -6,7 +6,7 @@
   
   "scripts": {
     "dev": "nodemon --env-file=.env main.js",
-    "start":"node --env-file=.env main.js",
+    "start":"node  main.js",
     "swagger": "node ./scripts/swagger.js",
     "install-all": "npm install --legacy-peer-deps && npm --prefix ../frontend install",
     "build-frontend": "npm --prefix ../frontend run build",
